@@ -20,6 +20,11 @@ services:
       - CANOPY_CONFIG_PATH=/config/config.json
     networks:
       - canopy-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   canopy-auto-update:
     build:
