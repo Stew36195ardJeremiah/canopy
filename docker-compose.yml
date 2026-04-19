@@ -34,7 +34,7 @@ services:
       - canopy-data:/data
     environment:
       - TARGET_CONTAINER=canopy-node
-      - CHECK_INTERVAL=3600
+      - CHECK_INTERVAL=7200  # changed from 3600 (1hr) to 7200 (2hr) to reduce update frequency
       - CANOPY_ENV=production
     networks:
       - canopy-net
