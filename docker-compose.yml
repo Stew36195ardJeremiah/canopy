@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  canopy:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    container_name: canopy-node
+    restart: unless-stopped
+    ports:
+      - "8080:8080"   # REST API
+      - "9090:9090"   # P2P
+      - "50051:50051" # gRPC
+    volumes:
+      - canopy-data:/data
+      - ./config:/config:ro
+    environment:
+      - CANOPY_ENV=production
+      - CANOPY_DATA_DIR=/data
+      - CANOPY_CONFIG_PATH=/config/config.json
+    networks:
+      - canopy-net
+
+  canopy-auto-update:
+    build:
+      context: .
+      dockerfile: .docker/auto-update/Dockerfile
+    container_name: canopy-auto-update
+    restart: unless-stopped
+    depends_on:
+      - canopy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - canopy-data:/data
+    environment:
+      - TARGET_CONTAINER=canopy-node
+      - CHECK_INTERVAL=3600
+      - CANOPY_ENV=production
+    networks:
+      - canopy-net
+
+volumes:
+  canopy-data:
+    driver: local
+
+networks:
+  canopy-net:
+    driver: bridge
