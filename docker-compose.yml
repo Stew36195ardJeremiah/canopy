@@ -24,7 +24,7 @@ services:
       driver: "json-file"
       options:
         max-size: "25m"  # increased from 10m for easier debugging
-        max-file: "5"    # keep more log files for historical review
+        max-file: "10"   # increased from 5 to retain more log history
 
   canopy-auto-update:
     build:
